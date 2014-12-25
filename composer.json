@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Stackify\\Log\\Monolog": "src/Stackify/Log/Monolog"
+            "Stackify\\Log\\Monolog\\": "src/Stackify/Log/Monolog"
         }
     }
 }
