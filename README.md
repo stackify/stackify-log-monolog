@@ -113,13 +113,6 @@ It can be useful to specify ```curl``` destination path for ExecTransport. This 
 $transport = new ExecTransport($apiKey, ['curlPath' => '/usr/bin/curl']);
 ```
 
-#### Agent port
-By default AgentTransport uses port number ```10515```. To change it pass new port number:
-```php
-$transport = new AgentTransport(['port' => 10516]);
-$handler = new StackifyHandler('application_name', 'environment_name', $transport);
-```
-
 ## Troubleshooting
 If transport does not work, try looking into ```vendor\stackify\logger\src\Stackify\debug\log.log``` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log).
 Note that ExecTransport does not produce any errors at all, but you can switch it to debug mode:
@@ -129,7 +122,7 @@ $transport = new ExecTransport($apiKey, ['debug' => true]);
 
 ## License
 
-Copyright 2014 Stackify, LLC.
+Copyright 2015 Stackify, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
