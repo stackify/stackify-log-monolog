@@ -55,7 +55,7 @@ try {
     $db->connect();
 catch (DbException $ex) {
     // you may use any key name
-    $logger->error('DB is not available', ['ex' => $ex]);
+    $logger->addError('DB is not available', ['ex' => $ex]);
 }
 ```
 
