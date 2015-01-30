@@ -28,7 +28,7 @@ use Stackify\Log\Monolog\Handler as StackifyHandler;
 $handler = new StackifyHandler('application_name');
 $logger = new Logger('log_channel');
 $logger->pushHandler($handler);
-$logger->warning('something happened');
+$logger->addWarning('something happened');
 ```
 
 If you use [MonologBundle](https://github.com/symfony/MonologBundle) it is best to configure the Stackify handler using the Symfony DependencyInjection configuration files:
