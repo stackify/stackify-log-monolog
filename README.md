@@ -85,6 +85,21 @@ monolog:
 
 You will need to enable the TCP listener by checking the "PHP App Logs (Agent Log Collector)" in the server settings page in Stackify. See [Log Collectors Page](http://docs.stackify.com/m/7787/l/302705-log-collectors) for more details.
 
+## Notes
+
+To get more error details pass Exception objects to the logger if available:
+```php
+try {
+    $db->connect();
+catch (DbException $ex) {
+    // you may use any key name
+    $logger->addError('DB is not available', ['ex' => $ex]);
+}
+```
+
+
+
+
 
 
 
