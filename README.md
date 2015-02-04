@@ -45,7 +45,34 @@ $transport = new ExecTransport($apiKey, ['curlPath' => '/usr/bin/curl']);
 
 ### CurlTransport
 
-TODO
+CurlTransport does not require a Stackify agent to be installed and it also sends data directly to Stackify services. It collects log entries in a single batch and sends data using native [PHP cURL](http://php.net/manual/en/book.curl.php) functions. This way is a blocking one, so it should not be used on production environments. To configure CurlTransport you need to pass environment name and API key (license key):
+
+```php
+use Stackify\Log\Transport\CurlTransport;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+    
+$transport = new CurlTransport('api_key');
+$handler = new StackifyHandler('application_name', 'environment_name', $transport);
+$logger = new Logger('logger');
+$logger->pushHandler($handler);
+```
+
+or configuration
+
+```yml
+services:
+    stackify_transport:
+        class: "Stackify\\Log\\Transport\CurlTransport"
+        arguments: ["api_key"]
+    stackify_handler:
+        class: "Stackify\\Log\\Monolog\\Handler"
+        arguments: ["application_name", "environment_name", "@stackify_transport"]
+monolog:
+    handlers:
+        stackify:
+            type: service
+            id: stackify_handler
+```
 
 #### Optional Configuration
 
@@ -64,14 +91,13 @@ use Monolog\Logger;
 use Stackify\Log\Monolog\Handler as StackifyHandler;
 
 $handler = new StackifyHandler('application_name');
-$logger = new Logger('log_channel');
+$logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
 
 or configuration
 
 ```yml
-# or configuration file example
 services:
     stackify_handler:
         class: "Stackify\\Log\\Monolog\\Handler"
@@ -79,8 +105,8 @@ services:
 monolog:
     handlers:
         stackify:
-            type:   service
-            id:     stackify_handler
+            type: service
+            id: stackify_handler
 ```
 
 You will need to enable the TCP listener by checking the "PHP App Logs (Agent Log Collector)" in the server settings page in Stackify. See [Log Collectors Page](http://docs.stackify.com/m/7787/l/302705-log-collectors) for more details.
