@@ -13,6 +13,7 @@ Sign Up for a Trial:
 http://www.stackify.com/sign-up/
 
 ## Installation
+
 Install the latest version with `composer require stackify/monolog`
 
 Or add dependency to `composer.json` file:
@@ -20,19 +21,7 @@ Or add dependency to `composer.json` file:
 "stackify/monolog": "~1.0",
 ```
 
-## Usage
-
-```php
-use Monolog\Logger;
-use Stackify\Log\Monolog\Handler as StackifyHandler;
-
-$handler = new StackifyHandler('application_name');
-$logger = new Logger('log_channel');
-$logger->pushHandler($handler);
-$logger->addWarning('something happened');
-```
-
-If you use [MonologBundle](https://github.com/symfony/MonologBundle) it is best to configure the Stackify handler using the Symfony DependencyInjection configuration files:
+If you use [MonologBundle](https://github.com/symfony/MonologBundle) it is best to configure the Stackify handler using the Symfony Dependency Injection configuration files:
 ```yml
 # YML example
 services:
