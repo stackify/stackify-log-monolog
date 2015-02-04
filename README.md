@@ -27,7 +27,32 @@ There are three different transport options that can be configured to send data 
 
 ### ExecTransport
 
-TODO
+ExecTransport does not require a Stackify agent to be installed because it sends data directly to Stackify services. It collects log entries in a single batch, calls curl using the ```exec``` function, and sends it to the background immediately [```exec('curl ... &')```]. This will affect the performance of your application minimally, but it requires permissions to call ```exec``` inside the PHP script and it may cause silent data loss in the event of any network issues. This transport method does not work on Windows. To configure ExecTransport you need to pass the environment name and API key (license key):
+
+```php
+use Stackify\Log\Transport\ExecTransport;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+    
+$transport = new ExecTransport('api_key');
+$handler = new StackifyHandler('application_name', 'environment_name', $transport);
+$logger = new Logger('logger');
+$logger->pushHandler($handler);
+```
+    
+```yml
+services:
+    stackify_transport:
+        class: "Stackify\\Log\\Transport\ExecTransport"
+        arguments: ["api_key"]
+    stackify_handler:
+        class: "Stackify\\Log\\Monolog\\Handler"
+        arguments: ["application_name", "environment_name", "@stackify_transport"]
+monolog:
+    handlers:
+        stackify:
+            type: service
+            id: stackify_handler
+```
 
 #### Optional Configuration
 
@@ -122,54 +147,6 @@ catch (DbException $ex) {
     $logger->addError('DB is not available', ['ex' => $ex]);
 }
 ```
-
-
-
-
-
-
-
-
-## <a name="transport"></a>Transport options
-Handler supports three ways to deliver data to Stackify:
-
-- <b>AgentTransport</b> is used by default and it does not require additional configuration on PHP side. All data is be passed to the [Stackify agent](https://stackify.screenstepslive.com/s/3095/m/7787/l/119709-installation-for-linux), which must be installed on the same machine. Local TCP socket is used, so performance of your application is affected minimally.
-- <b>ExecTransport</b> does not require Stackify agent to be installed, because it sends data directly to Stackify services. It collects log entries in a single batch, calls curl using the ```exec``` function and sends it to the background immediately [```exec('curl ... &')```]. This will influence the performance of your application minimally, but it requires permissions to call ```exec``` inside the PHP script and it may cause silent data loss in the event of any network issues. This transport method does not work on Windows. To configure ExecTransport you need to pass the environment name and API key (license key):
-    ```php
-    use Stackify\Log\Transport\ExecTransport;
-    use Stackify\Log\Monolog\Handler as StackifyHandler;
-    
-    $transport = new ExecTransport('api_key');
-    $handler = new StackifyHandler('application_name', 'environment_name', $transport);
-    ```
-    ```yml
-    # or configuration file example
-    services:
-        stackify_transport:
-            class: "Stackify\\Log\\Transport\ExecTransport"
-            arguments: ["api_key"]
-        stackify_handler:
-            class: "Stackify\\Log\\Monolog\\Handler"
-            arguments: ["application_name", "environment_name", "@stackify_transport"]
-    ```
-- <b>CurlTransport</b> does not require a Stackify agent to be installed and it also sends data directly to Stackify services. It collects log entries in a single batch and sends data using native [PHP cURL](http://php.net/manual/en/book.curl.php) functions. This way is a blocking one, so it should not be used on production environments. To configure CurlTransport you need to pass environment name and API key (license key):
-    ```php
-    use Stackify\Log\Transport\CurlTransport;
-    use Stackify\Log\Monolog\Handler as StackifyHandler;
-    
-    $transport = new CurlTransport('api_key');
-    $handler = new StackifyHandler('application_name', 'environment_name', $transport);
-    ```
-    ```yml
-    # or configuration file example
-    services:
-        stackify_transport:
-            class: "Stackify\\Log\\Transport\CurlTransport"
-            arguments: ["api_key"]
-        stackify_handler:
-            class: "Stackify\\Log\\Monolog\\Handler"
-            arguments: ["application_name", "environment_name", "@stackify_transport"]
-    ```
 
 ## Troubleshooting
 If transport does not work, try looking into ```vendor\stackify\logger\src\Stackify\debug\log.log``` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log).
