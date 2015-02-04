@@ -102,6 +102,11 @@ services:
     stackify_handler:
         class: "Stackify\\Log\\Monolog\\Handler"
         arguments: ["application_name"]
+monolog:
+    handlers:
+        stackify:
+            type:   service
+            id:     stackify_handler
 ```
 
 You will need to enable the TCP listener by checking the "PHP App Logs (Agent Log Collector)" in the server settings page in Stackify. See [Log Collectors Page](http://docs.stackify.com/m/7787/l/302705-log-collectors) for more details.
