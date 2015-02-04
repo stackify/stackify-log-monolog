@@ -21,33 +21,7 @@ Or add dependency to `composer.json` file:
 "stackify/monolog": "~1.0",
 ```
 
-If you use [MonologBundle](https://github.com/symfony/MonologBundle) it is best to configure the Stackify handler using the Symfony Dependency Injection configuration files:
-```yml
-# YML example
-services:
-    stackify_handler:
-        class: "Stackify\\Log\\Monolog\\Handler"
-        arguments: ["application_name"]
-
-monolog:
-    handlers:
-        main:
-            type:   stream
-            path:   "%kernel.logs_dir%/%kernel.environment%.log"
-        stackify:
-            type:   service
-            id:     stackify_handler
-```
-
-To get more error details pass Exception objects to the logger if available:
-```php
-try {
-    $db->connect();
-catch (DbException $ex) {
-    // you may use any key name
-    $logger->addError('DB is not available', ['ex' => $ex]);
-}
-```
+If you use [MonologBundle](https://github.com/symfony/MonologBundle) it is best to configure the Stackify handler using the Symfony Dependency Injection configuration files. See examples below.
 
 There are three different transport options that can be configured to send data to Stackify.  Below will show how to implement the different transport options.
 
