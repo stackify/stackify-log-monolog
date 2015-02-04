@@ -53,11 +53,42 @@ There are three different transport options that can be configured to send data 
 
 ### ExecTransport
 
+TODO
+
+#### Optional Configuration
+
+<b>Proxy</b>
+- ExecTransport supports data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
+```php
+$transport = new ExecTransport($apiKey, ['proxy' => 'https://55.88.22.11:3128']);
+```
+
+<b>Curl path</b>
+- It can be useful to specify ```curl``` destination path for ExecTransport. This option is set to 'curl' by default.
+```php
+$transport = new ExecTransport($apiKey, ['curlPath' => '/usr/bin/curl']);
+```
+
 ### CurlTransport
+
+TODO
+
+#### Optional Configuration
+
+<b>Proxy</b>
+- CurlTransport supports data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
+```php
+$transport = new CurlTransport($apiKey, ['proxy' => 'https://55.88.22.11:3128']);
+```
 
 ### AgentTransport
 
+AgentTransport does not require additional configuration in your PHP code because all data is passed to the [Stackify agent](https://stackify.screenstepslive.com/s/3095/m/7787/l/119709-installation-for-linux). The agent must be installed on the same machine. Local TCP socket on port 10515 is used, so performance of your application is affected minimally.
+```php
+TODO
+```
 
+You will need to enable the TCP listener by checking the "PHP App Logs (Agent Log Collector)" in the server settings page in Stackify. See [Log Collectors Page](http://docs.stackify.com/m/7787/l/302705-log-collectors) for more details.
 
 
 
@@ -103,19 +134,6 @@ Handler supports three ways to deliver data to Stackify:
             class: "Stackify\\Log\\Monolog\\Handler"
             arguments: ["application_name", "environment_name", "@stackify_transport"]
     ```
-
-## Configuration
-#### Proxy
-ExecTransport and CurlTransport support data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
-```php
-$transport = new ExecTransport($apiKey, ['proxy' => 'https://55.88.22.11:3128']);
-```
-
-#### Curl path
-It can be useful to specify ```curl``` destination path for ExecTransport. This option is set to 'curl' by default.
-```php
-$transport = new ExecTransport($apiKey, ['curlPath' => '/usr/bin/curl']);
-```
 
 ## Troubleshooting
 If transport does not work, try looking into ```vendor\stackify\logger\src\Stackify\debug\log.log``` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log).
