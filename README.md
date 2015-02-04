@@ -5,9 +5,11 @@ Monolog handler for sending log messages and exceptions to Stackify.
 Monolog >= 1.1.0 is supported.
 
 Errors and Logs Overview:
+
 http://docs.stackify.com/m/7787/l/189767
 
 Sign Up for a Trial:
+
 http://www.stackify.com/sign-up/
 
 ## Installation
@@ -15,12 +17,11 @@ Install the latest version with `composer require stackify/monolog`
 
 Or add dependency to `composer.json` file:
 ```json
-    "stackify/monolog": "~1.0",
+"stackify/monolog": "~1.0",
 ```
 
-By default the handler requires [Stackify agent](https://stackify.screenstepslive.com/s/3095/m/7787/l/119709-installation-for-linux) to be running. There are other ways to send data to Stackify, read about the pros and cons in the [transports](#transport) section.
+## Usage
 
-## Basic usage
 ```php
 use Monolog\Logger;
 use Stackify\Log\Monolog\Handler as StackifyHandler;
@@ -58,6 +59,20 @@ catch (DbException $ex) {
     $logger->addError('DB is not available', ['ex' => $ex]);
 }
 ```
+
+There are three different transport options that can be configured to send data to Stackify.  Below will show how to implement the different transport options.
+
+### ExecTransport
+
+### CurlTransport
+
+### AgentTransport
+
+
+
+
+
+
 
 ## <a name="transport"></a>Transport options
 Handler supports three ways to deliver data to Stackify:
