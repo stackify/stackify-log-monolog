@@ -84,8 +84,24 @@ $transport = new CurlTransport($apiKey, ['proxy' => 'https://55.88.22.11:3128'])
 ### AgentTransport
 
 AgentTransport does not require additional configuration in your PHP code because all data is passed to the [Stackify agent](https://stackify.screenstepslive.com/s/3095/m/7787/l/119709-installation-for-linux). The agent must be installed on the same machine. Local TCP socket on port 10515 is used, so performance of your application is affected minimally.
+
 ```php
-TODO
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$handler = new StackifyHandler('application_name');
+$logger = new Logger('log_channel');
+$logger->pushHandler($handler);
+```
+
+or configuration
+
+```yml
+# or configuration file example
+services:
+    stackify_handler:
+        class: "Stackify\\Log\\Monolog\\Handler"
+        arguments: ["application_name"]
 ```
 
 You will need to enable the TCP listener by checking the "PHP App Logs (Agent Log Collector)" in the server settings page in Stackify. See [Log Collectors Page](http://docs.stackify.com/m/7787/l/302705-log-collectors) for more details.
