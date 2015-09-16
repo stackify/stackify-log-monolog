@@ -1,6 +1,8 @@
 stackify-log-monolog
 ================
 
+[![PHP version](https://badge.fury.io/ph/stackify%2Fmonolog.svg)](http://badge.fury.io/ph/stackify%2Fmonolog)
+
 Monolog handler for sending log messages and exceptions to Stackify.
 Monolog >= 1.1.0 is supported.
 
