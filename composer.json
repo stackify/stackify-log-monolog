@@ -7,7 +7,7 @@
     "license": "Apache-2.0",
     "require": {
         "stackify/logger": "~1.0",
-        "monolog/monolog": "1 - 2"
+        "monolog/monolog": "~2.0"
     },
     "autoload": {
         "psr-4": {
