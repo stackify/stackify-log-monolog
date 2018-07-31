@@ -28,12 +28,24 @@ class Handler extends AbstractHandler
         $this->transport = $transport;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function handle(array $record)
     {
+        if (!$this->isHandling($record)) {
+            return false;
+        }
+        
         $logEntry = new LogEntry($record);
         $this->transport->addEntry($logEntry);
+
+        return true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function close()
     {
         parent::close();
