@@ -1,12 +1,12 @@
-stackify-log-monolog
+stackify-log-monolog V2
 ================
 
 [![PHP version](https://badge.fury.io/ph/stackify%2Fmonolog.svg)](http://badge.fury.io/ph/stackify%2Fmonolog)
 
 Monolog handler for sending log messages and exceptions to Stackify.
-Monolog >=1.1.0  <2.0.0 is supported.
+Monolog >= 2.0.0 is supported.
 
-> For Monolog > 2.0.0, please use the [2.x branch](https://github.com/stackify/stackify-log-monolog/tree/2.x)
+> For Monolog < 2.0.0, please use the [1.x branch](https://github.com/stackify/stackify-log-monolog/tree/1.x)
 
 Errors and Logs Overview:
 
@@ -26,7 +26,7 @@ Install the latest version with `composer require stackify/monolog "~1.0"`
 
 Or add dependency to `composer.json` file:
 ```json
-"stackify/monolog": "~1.0",
+"stackify/monolog": "~2.0",
 ```
 
 If you use [Symfony Monolog Bundle](https://github.com/symfony/MonologBundle) it is best to configure the Stackify handler using the Symfony Dependency Injection configuration files. See examples below.
@@ -41,14 +41,14 @@ PHP:
 ```php
 use Stackify\Log\Transport\ExecTransport;
 use Stackify\Log\Monolog\Handler as StackifyHandler;
-    
+
 $transport = new ExecTransport('api_key');
 $handler = new StackifyHandler('application_name', 'environment_name', $transport);
 $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
-   
-Symfony: 
+
+Symfony:
 ```yml
 services:
     stackify_transport:
@@ -86,14 +86,14 @@ PHP:
 ```php
 use Stackify\Log\Transport\CurlTransport;
 use Stackify\Log\Monolog\Handler as StackifyHandler;
-    
+
 $transport = new CurlTransport('api_key');
 $handler = new StackifyHandler('application_name', 'environment_name', $transport);
 $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
 
-Symfony: 
+Symfony:
 ```yml
 services:
     stackify_transport:
@@ -131,7 +131,7 @@ $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
 
-Symfony: 
+Symfony:
 ```yml
 services:
     stackify_handler:
