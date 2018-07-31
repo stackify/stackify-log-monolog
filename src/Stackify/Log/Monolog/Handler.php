@@ -39,6 +39,8 @@ class Handler extends AbstractHandler
 
         $logEntry = new LogEntry($record);
         $this->transport->addEntry($logEntry);
+
+        return true;
     }
 
     /**
