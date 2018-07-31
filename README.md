@@ -10,7 +10,7 @@ Monolog >= 2.0.0 is supported.
 
 Errors and Logs Overview:
 
-http://support.stackify.com/hc/en-us/articles/205419435-Errors-and-Logs-Overview
+http://support.stackify.com/errors-and-logs-overview/
 
 Smarter Errors & Logs for PHP:
 
