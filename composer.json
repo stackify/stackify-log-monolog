@@ -6,12 +6,14 @@
     "type": "library",
     "license": "Apache-2.0",
     "require": {
-        "stackify/logger": "~1.0",
+        "stackify/logger": "~1.1",
         "monolog/monolog": "~1.1"
     },
     "autoload": {
         "psr-4": {
             "Stackify\\Log\\Monolog\\": "src/Stackify/Log/Monolog"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
