@@ -66,17 +66,26 @@ monolog:
 
 #### Optional Configuration
 
-<b>Proxy</b>
+**Proxy**
 - ExecTransport supports data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
 ```php
 $transport = new ExecTransport($apiKey, ['proxy' => 'https://55.88.22.11:3128']);
 ```
 
-<b>Curl path</b>
+**Curl path**
 - It can be useful to specify ```curl``` destination path for ExecTransport. This option is set to 'curl' by default.
 ```php
 $transport = new ExecTransport($apiKey, ['curlPath' => '/usr/bin/curl']);
 ```
+
+**Log Server Environment Variables**
+- Server environment variables can be added to error log message metadata. **Note:** This will log all 
+system environment variables; do not enable if sensitive information such as passwords or keys are stored this way.
+
+ ```php
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, true); 
+```
+
 
 ### CurlTransport
 
@@ -111,10 +120,18 @@ monolog:
 
 #### Optional Configuration
 
-<b>Proxy</b>
+**Proxy**
 - CurlTransport supports data delivery through proxy. Specify proxy using [libcurl format](http://curl.haxx.se/libcurl/c/CURLOPT_PROXY.html): <[protocol://][user:password@]proxyhost[:port]>
 ```php
 $transport = new CurlTransport($apiKey, ['proxy' => 'https://55.88.22.11:3128']);
+```
+
+**Log Server Environment Variables**
+- Server environment variables can be added to error log message metadata. **Note:** This will log all 
+system environment variables; do not enable if sensitive information such as passwords or keys are stored this way.
+
+ ```php
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, true); 
 ```
 
 ### AgentTransport
@@ -126,7 +143,7 @@ PHP:
 use Monolog\Logger;
 use Stackify\Log\Monolog\Handler as StackifyHandler;
 
-$handler = new StackifyHandler('application_name');
+$handler = new StackifyHandler('application_name', 'environment_name');
 $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
@@ -136,7 +153,7 @@ Symfony:
 services:
     stackify_handler:
         class: "Stackify\\Log\\Monolog\\Handler"
-        arguments: ["application_name"]
+        arguments: ["application_name", "environment_name"]
 monolog:
     handlers:
         stackify:
@@ -145,6 +162,16 @@ monolog:
 ```
 
 You will need to enable the TCP listener by checking the "PHP App Logs (Agent Log Collector)" in the server settings page in Stackify. See [Log Collectors Page](http://docs.stackify.com/m/7787/l/302705-log-collectors) for more details.
+
+#### Optional Settings
+
+**Log Server Environment Variables**
+- Server environment variables can be added to error log message metadata. **Note:** This will log all 
+system environment variables; do not enable if sensitive information such as passwords or keys are stored this way.
+
+ ```php
+$handler = new StackifyHandler('application_name', 'environment_name', null, true); 
+```
 
 ## Notes
 
@@ -167,7 +194,7 @@ $transport = new ExecTransport($apiKey, ['debug' => true]);
 
 ## License
 
-Copyright 2015 Stackify, LLC.
+Copyright 2018 Stackify, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
