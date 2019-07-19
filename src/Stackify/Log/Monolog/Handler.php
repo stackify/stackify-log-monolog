@@ -1,5 +1,4 @@
 <?php
-
 namespace Stackify\Log\Monolog;
 
 use Stackify\Log\Builder\MessageBuilder;
@@ -7,48 +6,64 @@ use Stackify\Log\Transport\TransportInterface;
 use Stackify\Log\Transport\AgentTransport;
 
 use Monolog\Logger;
-use Monolog\Handler\AbstractHandler;
+use Monolog\Handler\AbstractProcessingHandler;
 
-class Handler extends AbstractHandler
+class Handler extends AbstractProcessingHandler
 {
-
     /**
+     * Stackify transport
+     * 
      * @var \Stackify\Log\Transport\TransportInterface
      */
-    private $transport;
+    private $_transport;
 
-    public function __construct($appName, $environmentName = null, TransportInterface $transport = null, $logServerVariables = false, $level = Logger::DEBUG, $bubble = true)
-    {
+    /**
+     * Stackify monolog handler
+     *
+     * @param string             $appName 
+     * @param string             $environmentName 
+     * @param TransportInterface $transport 
+     * @param boolean            $logServerVariables 
+     * @param int                $level 
+     * @param boolean            $bubble 
+     */
+    public function __construct(
+        $appName, 
+        $environmentName = null, 
+        TransportInterface $transport = null, 
+        $logServerVariables = false, 
+        $level = Logger::DEBUG, 
+        $bubble = true
+    ) {
         parent::__construct($level, $bubble);
         $messageBuilder = new MessageBuilder('Stackify Monolog v.2.0', $appName, $environmentName, $logServerVariables);
         if (null === $transport) {
             $transport = new AgentTransport();
         }
         $transport->setMessageBuilder($messageBuilder);
-        $this->transport = $transport;
+        $this->_transport = $transport;
     }
 
     /**
      * {@inheritdoc}
+     * 
+     * @param array $record 
+     * 
+     * @return void
      */
-    public function handle(array $record): bool
+    public function write(array $record): void
     {
-        if (!$this->isHandling($record)) {
-            return false;
-        }
-
-        $logEntry = new LogEntry($record);
-        $this->transport->addEntry($logEntry);
-
-        return true;
+        $this->_transport->addEntry(new LogEntry($record));
     }
 
     /**
      * {@inheritdoc}
+     * 
+     * @return void
      */
     public function close(): void
     {
         parent::close();
-        $this->transport->finish();
+        $this->_transport->finish();
     }
 }
