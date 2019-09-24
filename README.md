@@ -1,4 +1,3 @@
-[![PHP version](https://badge.fury.io/ph/stackify%2Fmonolog.svg)](http://badge.fury.io/ph/stackify%2Fmonolog)
 
 # Stackify Monolog v2 Handler
 
