@@ -6,7 +6,7 @@
     "type": "library",
     "license": "Apache-2.0",
     "require": {
-        "stackify/logger": "~1.2",
+        "stackify/logger": "~1.3",
         "monolog/monolog": "~1.1"
     },
     "autoload": {
