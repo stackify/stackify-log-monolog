@@ -164,7 +164,7 @@ $logger->pushHandler($handler);
 ```yml
 services:
     stackify_transport:
-        class: "Stackify\\Log\\Transport\CurlTransport"
+        class: "Stackify\\Log\\Transport\\CurlTransport"
         arguments: ["api_key"]
 # Square/Curly Brackets
     stackify_handler:
