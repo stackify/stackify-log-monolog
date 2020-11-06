@@ -185,11 +185,96 @@ catch (DbException $ex) {
 }
 ```
 
+## Additional Configuration
+For additional configurations, you can set on the XML or the PHP File Configuration. Reference for the additional options are located on the stackify logger repository [Stackify PHP Logger - Configuration Settings](stackify/stackify-api-php#configuration-settings)
+
+### Transport Level
+- This applies to all the transports `(ExecTransport, CurlTransport, AgentTransport, AgentSocketTransport)`
+ ```php
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$config = array(
+        'CaptureServerVariables' => false,
+        'CaptureServerVariablesWhitelist' => '*',
+        'CaptureServerVariablesBlacklist' => 'REMOTE_ADDR,SERVER_ADDR',
+        ...
+    );
+
+$transport = new ExecTransport($apiKey, [
+    'config' => $config
+]);
+
+$handler = new StackifyHandler('application_name', 'environment_name', $transport);
+$logger = new Logger('logger');
+$logger->pushHandler($handler);
+```
+### Handler Level
+- This applies to the current Monolog Handler
+
+ ```php
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$transport = new ExecTransport($apiKey); // Your selected transport (Can be null which defaults to AgentSocketTransport)
+$logServerVariables = false; // Default
+$config = array(
+        'CaptureServerVariables' => false,
+        'CaptureServerVariablesWhitelist' => '*',
+        'CaptureServerVariablesBlacklist' => 'REMOTE_ADDR,SERVER_ADDR',
+        ...
+);
+
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, $logServerVariables, $config);
+$logger = new Logger('logger');
+$logger->pushHandler($handler);
+```
+### Symfony
+```yml
+services:
+    stackify_transport:
+        class: "Stackify\\Log\\Transport\CurlTransport"
+        arguments: ["api_key"]
+# Square/Curly Brackets
+    stackify_handler:
+        class: "Stackify\\Log\\Monolog\\Handler"
+        arguments: ["application_name", "environment_name", "@stackify_transport", false, { CaptureServerVariables: false, ... }]
+# or
+# Dash/Colon Space
+    stackify_handler:
+        class: "Stackify\\Log\\Monolog\\Handler"
+        arguments:
+            - "application_name"
+            - "environment_name"
+            - "@stackify_transport"
+            - false
+            - CaptureServerVariables: false
+              CaptureServerWhitelist: "*"
+              CaptureServerBlacklist: null
+              
+monolog:
+    handlers:
+        stackify:
+            type: service
+            id: stackify_handler
+```
+
 ## Troubleshooting
 If transport does not work, try looking into ```vendor\stackify\logger\src\Stackify\debug\log.log``` file (if it is available for writing). Errors are also written to global PHP [error_log](http://php.net/manual/en/errorfunc.configuration.php#ini.error-log).
 Note that ExecTransport does not produce any errors at all, but you can switch it to debug mode:
 ```php
 $transport = new ExecTransport($apiKey, ['debug' => true]);
+```
+
+You can set it also on the `Logger` level. Setting the `Debug` and `DebugLogPath`
+
+```php
+$config = array(
+        'DebugLogPath' => '/path/to/log.log',
+        'Debug' => true
+    );
+
+$logger = new StackifyHandler('application_name', 'environment_name', $transport, $logServerVariables, $config);
 ```
 
 ## License
