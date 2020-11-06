@@ -4,6 +4,7 @@ namespace Stackify\Log\Monolog;
 use Stackify\Log\Builder\MessageBuilder;
 use Stackify\Log\Transport\TransportInterface;
 use Stackify\Log\Transport\AgentSocketTransport;
+use Stackify\Log\Transport\Config\Agent as AgentConfig;
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -32,14 +33,24 @@ class Handler extends AbstractProcessingHandler
         $environmentName = null,
         TransportInterface $transport = null,
         $logServerVariables = false,
+        $config = null,
         $level = Logger::DEBUG,
         $bubble = true
     ) {
         parent::__construct($level, $bubble);
+
+        if ($config) {
+            // NOTE/TODO: Make extractOptions public for the transport 
+            // so we have more control.
+            AgentConfig::getInstance()->extract($config);
+        }
+
         $messageBuilder = new MessageBuilder('Stackify Monolog v.2.0', $appName, $environmentName, $logServerVariables);
+
         if (null === $transport) {
             $transport = new AgentSocketTransport();
         }
+
         $transport->setMessageBuilder($messageBuilder);
         $this->_transport = $transport;
     }
