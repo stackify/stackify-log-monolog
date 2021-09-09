@@ -32,3 +32,14 @@ steps:
     script: 'srcclr scan .'
   env:
     SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
+- task: CmdLine@2
+  inputs:
+    script: 'zip -r stackify-log-monolog.zip src/ composer.json'
+- task: Veracode@3
+  inputs:
+    ConnectionDetailsSelection: 'Endpoint'
+    AnalysisService: 'Veracode'
+    veracodeAppProfile: 'Retrace PHP Monolog library'
+    version: 'AZ-Devops-Build-$(build.buildNumber)'
+    filepath: 'stackify-log-monolog.zip'
+    maximumWaitTime: '360'
