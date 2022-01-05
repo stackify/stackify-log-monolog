@@ -34,7 +34,7 @@ steps:
   displayName: 'composer install'
 - task: CmdLine@2
   inputs:
-    script: 'curl -sSL https://www.sourceclear.com/install | sh'
+    script: 'curl -sSL https://www.sourceclear.com/install | bash'
 - task: CmdLine@2
   inputs:
     script: 'srcclr scan .'
