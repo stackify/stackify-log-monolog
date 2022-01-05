@@ -68,13 +68,34 @@ class Handler extends AbstractProcessingHandler
     }
 
     /**
+     * Flush logs to API
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        $this->_transport->finish();
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return void
      */
     public function close(): void
     {
+        $this->flush();
         parent::close();
-        $this->_transport->finish();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->flush();
+        parent::reset();
     }
 }
