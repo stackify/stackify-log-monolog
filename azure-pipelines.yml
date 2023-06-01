@@ -42,7 +42,7 @@ steps:
     SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
 - task: CmdLine@2
   inputs:
-    script: 'zip -r stackify-log-monolog.zip src/ composer.json'
+    script: 'zip -r stackify-log-monolog.zip src/Stackify/Log/Monolog/Handler.php src/Stackify/Log/Monolog/LogEntry.php composer.json'
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
