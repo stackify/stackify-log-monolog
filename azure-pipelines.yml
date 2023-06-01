@@ -40,30 +40,23 @@ steps:
     script: 'srcclr scan .'
   env:
     SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
-
 - task: CmdLine@2
   displayName: 'Make Directory'
   inputs:
-    script: 'mkdir test'
-
+    script: 'mkdir temp'
 - task: CmdLine@2
   displayName: 'Copy Files'
   inputs:
-    script: 'cp src/Stackify/Log/Monolog/Handler.php test && cp src/Stackify/Log/Monolog/LogEntry.php test && cp composer.json test'
-
+    script: 'cp src/Stackify/Log/Monolog/Handler.php temp && cp src/Stackify/Log/Monolog/LogEntry.php temp && cp composer.json temp'
 - task: CmdLine@2
-  displayName: 'Make test zip'
+  displayName: 'Make zip'
   inputs:
-    script: 'zip -r stackify-log-monolog-test.zip test'
-
-- task: CmdLine@2
-  inputs:
-    script: 'zip -r stackify-log-monolog.zip src/Stackify/Log/Monolog/Handler.php src/Stackify/Log/Monolog/LogEntry.php composer.json'
+    script: 'zip -r stackify-log-monolog.zip temp'
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
     AnalysisService: 'Veracode'
     veracodeAppProfile: 'Retrace PHP Monolog library'
     version: 'AZ-Devops-Build-$(build.buildNumber)'
-    filepath: 'stackify-log-monolog-test.zip'
+    filepath: 'stackify-log-monolog.zip'
     maximumWaitTime: '360'
