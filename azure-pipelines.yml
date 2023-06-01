@@ -41,8 +41,17 @@ steps:
   env:
     SRCCLR_API_TOKEN: $(SRCCLR_API_TOKEN)
 - task: CmdLine@2
+  displayName: 'Make Directory'
   inputs:
-    script: 'zip -r stackify-log-monolog.zip src/ composer.json'
+    script: 'mkdir temp'
+- task: CmdLine@2
+  displayName: 'Copy Files'
+  inputs:
+    script: 'cp src/Stackify/Log/Monolog/Handler.php temp && cp src/Stackify/Log/Monolog/LogEntry.php temp && cp composer.json temp'
+- task: CmdLine@2
+  displayName: 'Make zip'
+  inputs:
+    script: 'zip -r stackify-log-monolog.zip temp'
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Endpoint'
