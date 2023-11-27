@@ -6,6 +6,7 @@ use Stackify\Log\Entities\LogEntryInterface;
 use Stackify\Log\Entities\NativeError;
 
 use Monolog\Logger as MonologLogger;
+use Monolog\LogRecord as MonologLogRecord;
 
 final class LogEntry implements LogEntryInterface
 {
@@ -15,7 +16,7 @@ final class LogEntry implements LogEntryInterface
     private $context;
     private $nativeError;
 
-    public function __construct(array $record)
+    public function __construct(MonologLogRecord $record)
     {
         $this->record = $record;
         $context = $record['context'];
