@@ -7,7 +7,7 @@
     "license": "Apache-2.0",
     "require": {
         "php": ">=8.1",
-        "stackify/logger": "~2.0",
+        "stackify/logger": "dev-feature/psr-log-2-3 as 2.0",
         "monolog/monolog": "~3.0"
     },
     "require-dev": {
@@ -24,6 +24,12 @@
             "psr-4": {"Stackify\\Log\\Monolog\\Tests": "tests/"}
         }
     },
+    "repositories": [
+        {
+          "type": "vcs",
+          "url": "git@github.com:homiedopie/stackify-api-php.git"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }
