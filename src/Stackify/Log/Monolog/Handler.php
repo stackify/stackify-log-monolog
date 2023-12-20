@@ -63,7 +63,7 @@ class Handler extends AbstractProcessingHandler
         $this->_transport = $transport;
         $this->includeChannel = false;
 
-        if ($config && array_key_exists('includeChannel', $config) && $config['includeChannel']) {
+        if ($config && array_key_exists('IncludeChannel', $config) && $config['IncludeChannel']) {
             $this->includeChannel = true;
         }
     }

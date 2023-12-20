@@ -17,6 +17,7 @@ final class LogEntry implements LogEntryInterface
     private $nativeError;
     private $includeChannel;
     private $channel;
+    private static $kebabCache = [];
 
     public function __construct(MonologLogRecord $record, bool $includeChannel = false)
     {
@@ -74,7 +75,7 @@ final class LogEntry implements LogEntryInterface
     public function getMessage()
     {
         if ($this->includeChannel && $this->channel) {
-            return $this->record['message']." #{$this->channel}";
+            return $this->record['message']." #{$this->kebabCase($this->channel)}";
         }
 
         return $this->record['message'];
@@ -103,4 +104,21 @@ final class LogEntry implements LogEntryInterface
         return $this->record['level'] >= MonologLogger::ERROR;
     }
 
+
+    private function kebabCase($value = '')
+    {
+        $key = $value;
+        $delimiter = '-';
+
+        if (isset(static::$kebabCache[$key][$delimiter])) {
+            return static::$kebabCache[$key][$delimiter];
+        }
+
+        if (! ctype_lower($value)) {
+            $value = preg_replace('/\s+/u', '', ucwords($value));
+            $value = strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
+        }
+
+        return static::$kebabCache[$key][$delimiter] = $value;
+    }
 }

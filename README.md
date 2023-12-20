@@ -166,6 +166,26 @@ $handler = new StackifyHandler('application_name', 'environment_name', $transpor
 $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
+#### Handler Level Option
+- **Include Channel**
+    - This will include the logger name or the channel set for the log entry.
+
+ ```php
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$transport = new ExecTransport($apiKey); // Your selected transport (Can be null which defaults to AgentSocketTransport)
+$logServerVariables = false; // Default
+$config = array(
+        'IncludeChannel' => true,
+        ...
+);
+
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, $logServerVariables, $config);
+$logger = new Logger('logger');
+$logger->pushHandler($handler);
+```
+
 ### Symfony
 ```yml
 services:

@@ -74,6 +74,31 @@ class HandlerTest extends TestCase {
         $transport->reset();
     }
 
+    public function testLogRecordChannelWithSpace()
+    {
+        $level = Level::Info;
+        $message = 'Hello, world! ' . $level->value;
+        $context = ['foo' => 'bar', 'level' => $level->value];
+
+        $transport = $this->createDummyTransport();
+
+        $includeChannel = true;
+        $channel = "Test Channel";
+        $handler = $this->createDummyHandler($transport, $level, $includeChannel);
+        $record = $this->getRecord($level, $message, context: $context, channel: $channel);
+        $handler->handle($record);
+
+        $logEntries = $transport->getEntries();
+
+        $firstLogEntry = $logEntries[0];
+        $this->assertEquals(1, count($logEntries));
+        $this->assertEquals($firstLogEntry->getLevel(), strtoupper($record->level->name));
+        $this->assertEquals($firstLogEntry->getMessage(), $record->message . " #test-channel");
+
+        // Reset every call
+        $transport->reset();
+    }
+
     private function createDummyHandler($transport, Level $level = null, $includeChannel = false) {
         return $this->createHandler($this->appName, $this->environmentName, $transport, $level, $includeChannel);
     }
@@ -82,7 +107,7 @@ class HandlerTest extends TestCase {
     {
         $config = [];
         if ($includeChannel) {
-            $config['includeChannel'] = true;
+            $config['IncludeChannel'] = true;
         }
 
         if (null === $level) {
