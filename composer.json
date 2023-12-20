@@ -10,9 +10,18 @@
         "stackify/logger": "~2.0",
         "monolog/monolog": "~3.0"
     },
+    "require-dev": {
+        "phpstan/phpstan": "^1.9",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.4",
+        "phpunit/phpunit": "^10.1"
+    },
     "autoload": {
         "psr-4": {
             "Stackify\\Log\\Monolog\\": "src/Stackify/Log/Monolog"
+        },
+        "autoload-dev": {
+            "psr-4": {"Stackify\\Log\\Monolog\\Tests": "tests/"}
         }
     },
     "minimum-stability": "dev",
