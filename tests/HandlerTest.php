@@ -4,6 +4,7 @@ namespace Stackify\Log\Monolog\Tests;
 
 use Monolog\Level;
 use Monolog\Test\TestCase;
+use Psr\Log\LogLevel;
 use Stackify\Log\Builder\BuilderInterface;
 use Stackify\Log\Entities\LogEntryInterface;
 use Stackify\Log\Monolog\Handler;
@@ -48,16 +49,46 @@ class HandlerTest extends TestCase {
         $transport->reset();
     }
 
-    private function createDummyHandler($transport, Level $level = null) {
-        return $this->createHandler($this->appName, $this->environmentName, $transport, $level);
+    public function testLogRecordChannel()
+    {
+        $level = Level::Info;
+        $message = 'Hello, world! ' . $level->value;
+        $context = ['foo' => 'bar', 'level' => $level->value];
+
+        $transport = $this->createDummyTransport();
+
+        $includeChannel = true;
+        $channel = "test";
+        $handler = $this->createDummyHandler($transport, $level, $includeChannel);
+        $record = $this->getRecord($level, $message, context: $context, channel: $channel);
+        $handler->handle($record);
+
+        $logEntries = $transport->getEntries();
+
+        $firstLogEntry = $logEntries[0];
+        $this->assertEquals(1, count($logEntries));
+        $this->assertEquals($firstLogEntry->getLevel(), strtoupper($record->level->name));
+        $this->assertEquals($firstLogEntry->getMessage(), $record->message . " #{$channel}");
+
+        // Reset every call
+        $transport->reset();
     }
 
-    private function createHandler($appName, $environmentName, $transport, Level $level = null): Handler
+    private function createDummyHandler($transport, Level $level = null, $includeChannel = false) {
+        return $this->createHandler($this->appName, $this->environmentName, $transport, $level, $includeChannel);
+    }
+
+    private function createHandler($appName, $environmentName, $transport, Level $level = null, bool $includeChannel = false): Handler
     {
+        $config = [];
+        if ($includeChannel) {
+            $config['includeChannel'] = true;
+        }
+
         if (null === $level) {
-            $handler = new Handler($appName, $environmentName, $transport, false, null, $level);
+            $handler = new Handler($appName, $environmentName, $transport, false, $config, $level);
         } else {
-            $handler = new Handler($appName, $environmentName, $transport);
+            $handler = new Handler($appName, $environmentName, $transport, false, $config);
         }
 
         return $handler;

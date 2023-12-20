@@ -21,6 +21,11 @@ class Handler extends AbstractProcessingHandler
     private TransportInterface $_transport;
 
     /**
+     * Include channel inside message as hashtag
+     */
+    private bool $includeChannel;
+
+    /**
      * Stackify monolog handler
      *
      * @param string             $appName
@@ -56,6 +61,11 @@ class Handler extends AbstractProcessingHandler
 
         $transport->setMessageBuilder($messageBuilder);
         $this->_transport = $transport;
+        $this->includeChannel = false;
+
+        if ($config && $config['includeChannel']) {
+            $this->includeChannel = true;
+        }
     }
 
     /**
@@ -67,7 +77,7 @@ class Handler extends AbstractProcessingHandler
      */
     public function write(LogRecord $record): void
     {
-        $this->_transport->addEntry(new LogEntry($record));
+        $this->_transport->addEntry(new LogEntry($record, $this->includeChannel));
     }
 
     /**
