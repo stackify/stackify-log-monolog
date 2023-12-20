@@ -8,6 +8,8 @@ use Stackify\Log\Transport\Config\Agent as AgentConfig;
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 class Handler extends AbstractProcessingHandler
 {
@@ -16,7 +18,12 @@ class Handler extends AbstractProcessingHandler
      *
      * @var \Stackify\Log\Transport\TransportInterface
      */
-    private $_transport;
+    private TransportInterface $_transport;
+
+    /**
+     * Include channel inside message as hashtag
+     */
+    private bool $includeChannel;
 
     /**
      * Stackify monolog handler
@@ -29,14 +36,15 @@ class Handler extends AbstractProcessingHandler
      * @param boolean            $bubble
      */
     public function __construct(
-        $appName,
-        $environmentName = null,
+        string $appName,
+        string $environmentName = null,
         TransportInterface $transport = null,
-        $logServerVariables = false,
-        $config = null,
-        $level = Logger::DEBUG,
-        $bubble = true
+        bool $logServerVariables = false,
+        array $config = null,
+        int|string|Level $level = Level::Debug,
+        bool $bubble = true
     ) {
+        
         parent::__construct($level, $bubble);
 
         if ($config) {
@@ -45,7 +53,7 @@ class Handler extends AbstractProcessingHandler
             AgentConfig::getInstance()->extract($config);
         }
 
-        $messageBuilder = new MessageBuilder('Stackify Monolog v.2.0', $appName, $environmentName, $logServerVariables);
+        $messageBuilder = new MessageBuilder('Stackify Monolog v.3.0', $appName, $environmentName, $logServerVariables);
 
         if (null === $transport) {
             $transport = new AgentSocketTransport();
@@ -53,18 +61,23 @@ class Handler extends AbstractProcessingHandler
 
         $transport->setMessageBuilder($messageBuilder);
         $this->_transport = $transport;
+        $this->includeChannel = false;
+
+        if ($config && $config['includeChannel']) {
+            $this->includeChannel = true;
+        }
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param array $record
+     * @param LogRecord $record
      *
      * @return void
      */
-    public function write(array $record): void
+    public function write(LogRecord $record): void
     {
-        $this->_transport->addEntry(new LogEntry($record));
+        $this->_transport->addEntry(new LogEntry($record, $this->includeChannel));
     }
 
     /**
@@ -72,7 +85,7 @@ class Handler extends AbstractProcessingHandler
      *
      * @return void
      */
-    public function flush()
+    public function flush(): void
     {
         $this->_transport->finish();
     }
@@ -93,7 +106,7 @@ class Handler extends AbstractProcessingHandler
      *
      * @return void
      */
-    public function reset()
+    public function reset(): void
     {
         $this->flush();
         parent::reset();

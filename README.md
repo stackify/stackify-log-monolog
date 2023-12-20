@@ -1,10 +1,16 @@
 
-# Stackify Monolog v2 Handler
+# Stackify Monolog v3 Handler
 
 Monolog handler for sending log messages and exceptions to Stackify.
-Monolog >= 2.0.0 is supported.
+Monolog >= 3.0.0 is supported.
 
-> For Monolog v1, use the [1.x branch](https://github.com/stackify/stackify-log-monolog/tree/1.x)
+For Monolog V1
+
+> Use the [1.x branch](https://github.com/stackify/stackify-log-monolog/tree/1.x)
+
+For Monolog V2
+
+> Use the [2.x branch](https://github.com/stackify/stackify-log-monolog/tree/2.x)
 
 * **Errors and Logs Overview:** http://support.stackify.com/errors-and-logs-overview/
 * **Sign Up for a Trial:** http://www.stackify.com/sign-up/

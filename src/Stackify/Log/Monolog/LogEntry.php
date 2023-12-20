@@ -6,6 +6,7 @@ use Stackify\Log\Entities\LogEntryInterface;
 use Stackify\Log\Entities\NativeError;
 
 use Monolog\Logger as MonologLogger;
+use Monolog\LogRecord as MonologLogRecord;
 
 final class LogEntry implements LogEntryInterface
 {
@@ -14,10 +15,13 @@ final class LogEntry implements LogEntryInterface
     private $exception;
     private $context;
     private $nativeError;
+    private $includeChannel;
+    private $channel;
 
-    public function __construct(array $record)
+    public function __construct(MonologLogRecord $record, bool $includeChannel = false)
     {
         $this->record = $record;
+
         $context = $record['context'];
         // find exception and remove from context
         foreach ($context as $key => $value) {
@@ -44,6 +48,12 @@ final class LogEntry implements LogEntryInterface
         if (!empty($context)) {
             $this->context = $context;
         }
+
+        $this->includeChannel = $includeChannel;
+        $this->channel = null;
+        if ($record && $record['channel']) {
+            $this->channel = $record['channel'];
+        }
     }
 
     public function getContext()
@@ -63,6 +73,10 @@ final class LogEntry implements LogEntryInterface
 
     public function getMessage()
     {
+        if ($this->includeChannel && $this->channel) {
+            return $this->record['message']." #{$this->channel}";
+        }
+
         return $this->record['message'];
     }
 
