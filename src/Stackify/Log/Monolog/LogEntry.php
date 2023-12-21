@@ -13,13 +13,16 @@ final class LogEntry implements LogEntryInterface
 
     private $record;
     private $exception;
-    private $context;
+    private $context = [];
     private $nativeError;
     private $includeChannel;
+    private $includeExtraInContext;
     private $channel;
     private static $kebabCache = [];
+    private $extra = [];
+    private $hasExtra = false;
 
-    public function __construct(MonologLogRecord $record, bool $includeChannel = false)
+    public function __construct(MonologLogRecord $record, bool $includeChannel = false, bool $includeExtraInContext = false)
     {
         $this->record = $record;
 
@@ -46,19 +49,33 @@ final class LogEntry implements LogEntryInterface
                 $context['line']
             );
         }
+
         if (!empty($context)) {
             $this->context = $context;
         }
 
         $this->includeChannel = $includeChannel;
+        $this->includeExtraInContext = $includeExtraInContext;
         $this->channel = null;
+        $this->extra = [];
+        $this->hasExtra = false;
+
         if ($record && $record['channel']) {
             $this->channel = $record['channel'];
+        }
+
+        if ($record && $record['extra'] && !empty($record['extra'])) {
+            $this->extra = $record['extra'];
+            $this->hasExtra = true;
         }
     }
 
     public function getContext()
     {
+        if ($this->includeExtraInContext && $this->hasExtra) {
+            return array_merge($this->context, $this->extra);
+        }
+
         return $this->context;
     }
 

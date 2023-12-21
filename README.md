@@ -186,6 +186,32 @@ $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
 
+- **Include Extra In Context**
+    - This will include the extra property to the context (merging extra to context)
+
+ ```php
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$transport = new ExecTransport($apiKey); // Your selected transport (Can be null which defaults to AgentSocketTransport)
+$logServerVariables = false; // Default
+$config = array(
+        'IncludeExtraInContext' => true,
+        ...
+);
+
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, $logServerVariables, $config);
+$logger = new Logger('logger');
+$logger->pushProcessor(function ($record) {
+      if (empty($record['extra'])) {
+        $record['extra'] = [];
+      }
+      $record['extra']['dummy'] = 1;
+      return $record;
+});
+$logger->pushHandler($handler);
+```
+
 ### Symfony
 ```yml
 services:

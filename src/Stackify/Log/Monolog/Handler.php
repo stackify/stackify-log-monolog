@@ -26,6 +26,11 @@ class Handler extends AbstractProcessingHandler
     private bool $includeChannel;
 
     /**
+     * Include extra in context
+     */
+    private bool $includeExtraInContext;
+
+    /**
      * Stackify monolog handler
      *
      * @param string             $appName
@@ -62,9 +67,14 @@ class Handler extends AbstractProcessingHandler
         $transport->setMessageBuilder($messageBuilder);
         $this->_transport = $transport;
         $this->includeChannel = false;
+        $this->includeExtraInContext = false;
 
         if ($config && array_key_exists('IncludeChannel', $config) && $config['IncludeChannel']) {
             $this->includeChannel = true;
+        }
+
+        if ($config && array_key_exists('IncludeExtraInContext', $config) && $config['IncludeExtraInContext']) {
+            $this->includeExtraInContext = true;
         }
     }
 
@@ -77,7 +87,7 @@ class Handler extends AbstractProcessingHandler
      */
     public function write(LogRecord $record): void
     {
-        $this->_transport->addEntry(new LogEntry($record, $this->includeChannel));
+        $this->_transport->addEntry(new LogEntry($record, $this->includeChannel, $this->includeExtraInContext));
     }
 
     /**
