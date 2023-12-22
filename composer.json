@@ -19,10 +19,10 @@
     "autoload": {
         "psr-4": {
             "Stackify\\Log\\Monolog\\": "src/Stackify/Log/Monolog"
-        },
-        "autoload-dev": {
-            "psr-4": {"Stackify\\Log\\Monolog\\Tests": "tests/"}
         }
+    },
+    "autoload-dev": {
+        "psr-4": {"Stackify\\Log\\Monolog\\Tests": "tests/"}
     },
     "minimum-stability": "dev",
     "prefer-stable": true
