@@ -1,10 +1,16 @@
 
-# Stackify Monolog v2 Handler
+# Stackify Monolog v3 Handler
 
 Monolog handler for sending log messages and exceptions to Stackify.
-Monolog >= 2.0.0 is supported.
+Monolog >= 3.0.0 is supported.
 
-> For Monolog v1, use the [1.x branch](https://github.com/stackify/stackify-log-monolog/tree/1.x)
+For Monolog V1
+
+> Use the [1.x branch](https://github.com/stackify/stackify-log-monolog/tree/1.x)
+
+For Monolog V2
+
+> Use the [2.x branch](https://github.com/stackify/stackify-log-monolog/tree/2.x)
 
 * **Errors and Logs Overview:** http://support.stackify.com/errors-and-logs-overview/
 * **Sign Up for a Trial:** http://www.stackify.com/sign-up/
@@ -160,6 +166,52 @@ $handler = new StackifyHandler('application_name', 'environment_name', $transpor
 $logger = new Logger('logger');
 $logger->pushHandler($handler);
 ```
+#### Handler Level Option
+- **Include Channel**
+    - This will include the logger name or the channel set for the log entry.
+
+ ```php
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$transport = new ExecTransport($apiKey); // Your selected transport (Can be null which defaults to AgentSocketTransport)
+$logServerVariables = false; // Default
+$config = array(
+        'IncludeChannel' => true,
+        ...
+);
+
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, $logServerVariables, $config);
+$logger = new Logger('logger');
+$logger->pushHandler($handler);
+```
+
+- **Include Extra In Context**
+    - This will include the extra property to the context (merging extra to context)
+
+ ```php
+use Monolog\Logger;
+use Stackify\Log\Monolog\Handler as StackifyHandler;
+
+$transport = new ExecTransport($apiKey); // Your selected transport (Can be null which defaults to AgentSocketTransport)
+$logServerVariables = false; // Default
+$config = array(
+        'IncludeExtraInContext' => true,
+        ...
+);
+
+$handler = new StackifyHandler('application_name', 'environment_name', $transport, $logServerVariables, $config);
+$logger = new Logger('logger');
+$logger->pushProcessor(function ($record) {
+      if (empty($record['extra'])) {
+        $record['extra'] = [];
+      }
+      $record['extra']['dummy'] = 1;
+      return $record;
+});
+$logger->pushHandler($handler);
+```
+
 ### Symfony
 ```yml
 services:
