@@ -22,7 +22,7 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {"Stackify\\Log\\Monolog\\Tests": "tests/"}
+        "psr-4": {"Stackify\\Log\\Monolog\\Tests\\": "tests/"}
     },
     "minimum-stability": "dev",
     "prefer-stable": true
